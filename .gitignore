@@ -1,0 +1,10 @@
+# 诊断日志（AHK Key History 导出等，含个人信息，不入库）
+log.txt
+*.log
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 压缩包
+*.zip

@@ -1,0 +1,22 @@
+# Allow non-root users raw access to the Rapoo MT760 2.4G receiver
+# Source: https://phreer.github.io/2024/08/11/mouse-switcher-rapoo.html
+ACTION != "add", GOTO="endrule"
+SUBSYSTEM != "hidraw", GOTO="endrule"
+
+# Rapoo MT760 2.4G receiver (VID 0x24ae / PID 0x1870)
+ATTRS{idVendor}=="24ae", ATTRS{idProduct}=="1870", GOTO="applyrule"
+
+GOTO="endrule"
+
+LABEL="applyrule"
+
+# Allow any seated (logged-in) user to access the receiver.
+# uaccess: modern ACL-enabled udev
+TAG+="uaccess", TAG+="udev-acl"
+
+# ALSO grant the "plugdev" group read/write access.
+# More deterministic than seat-ACL: any member of plugdev can open the device.
+# (user y is a member of plugdev)
+MODE="0660", GROUP="plugdev"
+
+LABEL="endrule"

@@ -1,0 +1,10 @@
+# 统一换行符：脚本与文档强制 LF，避免 Windows/Linux 克隆差异
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.ahk text eol=lf
+*.rules text eol=lf
+*.bat text eol=lf
+*.vbs text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
