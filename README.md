@@ -1,4 +1,4 @@
-# Rapoo MT760 双 2.4G 接收器切换工具
+# Rapoo MT760 多 2.4G 接收器切换工具
 
 **[English](README.en.md) | 中文**
 
