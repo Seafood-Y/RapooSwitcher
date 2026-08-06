@@ -1,5 +1,7 @@
 # Rapoo MT760 双 2.4G 接收器切换工具
 
+**[English](README.en.md) | 中文**
+
 > 在 Linux 与 Windows 两台电脑之间自由切换雷柏 MT760 鼠标：一条命令、一个热键、或鼠标上的自定义按键。无需雷柏官方软件（它没有 Linux 版），全程免 sudo。
 
 ---
