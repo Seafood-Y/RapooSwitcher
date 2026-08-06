@@ -1,6 +1,6 @@
 # Rapoo MT760 Dual 2.4G Receiver Switcher
 
-> Freely switch a Rapoo MT760 mouse between Linux and Windows machines — with a single command, a hotkey, or a custom mouse button. No official Rapoo software required (there is no Linux version), no `sudo` needed for day-to-day use.
+> Freely switch a Rapoo MT760 mouse between Linux and Windows machines — with a single command, a hotkey, or a custom mouse button. No official Rapoo software required (there is no Linux version); after a one-time setup, daily use needs no `sudo`.
 
 ---
 
