@@ -102,10 +102,11 @@
 
 ```
 rapoo-switch/
-├── switch.sh             # Linux 切换命令（核心）
-├── hidapitester          # Linux 版工具（来自 todbot/hidapitester）
-├── 42-rapoo.rules        # udev 规则：普通用户免 root 访问接收器
-├── edge-switch.py        # [可选] 光标顶住屏幕边缘自动切换
+├── linux/
+│   ├── switch.sh             # Linux 切换命令（核心）
+│   ├── hidapitester          # Linux 版工具（来自 todbot/hidapitester）
+│   ├── 42-rapoo.rules        # udev 规则：普通用户免 root 访问接收器
+│   └── edge-switch.py        # [可选] 光标顶住屏幕边缘自动切换
 ├── windows/
 │   ├── hidapitester.exe        # Windows 版工具
 │   ├── switch_to_linux.bat     # Windows 上切回 Linux 的命令
@@ -113,6 +114,7 @@ rapoo-switch/
 │   ├── switch_back_to_linux.ahk# AutoHotkey v2 热键脚本
 │   └── README.txt              # Windows 侧安装/调试说明
 ├── README.md
+├── README.en.md
 └── LICENSE
 ```
 
@@ -120,19 +122,19 @@ rapoo-switch/
 
 ```bash
 # 1. 安装 udev 规则（让普通用户免 root 操作接收器）
-sudo cp 42-rapoo.rules /usr/lib/udev/rules.d/
+sudo cp linux/42-rapoo.rules /usr/lib/udev/rules.d/
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 # 若权限仍未生效，拔插一次接收器
 
 # 2. 验证普通用户可访问（应能列出设备而非权限错误）
-./hidapitester --vidpid 24ae:1870 --list-detail
+./linux/hidapitester --vidpid 24ae:1870 --list-detail
 
 # 3. 测试切换（信道 2 = Windows 接收器，按你的实测调整）
-./switch.sh 2
+./linux/switch.sh 2
 ```
 
-> `switch.sh` 默认使用仓库内的 `hidapitester`；也可装到 `~/.local/bin`，或通过环境变量 `HIDAPITESTER` 指定路径。
+> `linux/switch.sh` 默认使用仓库内的 `hidapitester`；也可装到 `~/.local/bin`，或通过环境变量 `HIDAPITESTER` 指定路径。
 
 ### Windows 部署
 
@@ -145,7 +147,7 @@ sudo udevadm trigger
 
 | 侧 | 绑定方式 | 动作 |
 |---|---|---|
-| Linux | GNOME 自定义快捷键：`<Control>Pause` → `bash /home/<user>/rapoo-switch/switch.sh 2` | 切去 Windows |
+| Linux | GNOME 自定义快捷键：`<Control>Pause` → `bash /home/<user>/rapoo-switch/linux/switch.sh 2` | 切去 Windows |
 | Windows | AutoHotkey（`switch_back_to_linux.ahk`）：`^Pause` + `^sc146` + `^vk03` → `switch_to_linux.vbs` | 切回 Linux |
 
 Linux 上在 设置 → 键盘 → 自定义快捷键 里配置；Windows 上运行 `.ahk` 后即生效。
@@ -166,8 +168,8 @@ Linux 上在 设置 → 键盘 → 自定义快捷键 里配置；Windows 上运
 ### 使用命令
 
 ```bash
-./switch.sh 1     # 切到信道 1（Linux 接收器）
-./switch.sh 2     # 切到信道 2（Windows 接收器）
+./linux/switch.sh 1     # 切到信道 1（Linux 接收器）
+./linux/switch.sh 2     # 切到信道 2（Windows 接收器）
 ```
 
 **信道号需要自行实测**：逐个试 `0 / 1 / 2 / 3`，切走后鼠标出现在另一台电脑的那个号就是对的。切走后当前电脑会暂时失去鼠标，属正常现象。
@@ -177,8 +179,8 @@ Linux 上在 设置 → 键盘 → 自定义快捷键 里配置；Windows 上运
 `edge-switch.py` 模拟官方软件的"鼠标移到屏幕边缘即切换"（原博客未实现，本项目补充）：
 
 ```bash
-python3 edge-switch.py --dry-run   # 只检测不切换（先验证）
-python3 edge-switch.py             # 运行
+python3 linux/edge-switch.py --dry-run   # 只检测不切换（先验证）
+python3 linux/edge-switch.py             # 运行
 ```
 
 用 `--debug` 可查看详细日志；在脚本顶部 `CONFIG` 里配置各边缘对应的信道。
@@ -192,7 +194,7 @@ python3 edge-switch.py             # 运行
 鼠标宏注入的是 `Ctrl+Break` 而非 `Ctrl+Pause`（Pause/Break 键在 Windows 上的怪癖：按下是 VK_CANCEL / SC 146，松开才变 VK_PAUSE）。请使用仓库内已包含 `^sc146` / `^vk03` 的 `switch_back_to_linux.ahk`。若仍无效，可在雷柏驱动里把该键改为发送 `Ctrl+F12`，并同步修改 AHK 与 Linux 的 gsettings。
 
 **Q: 信道号怎么找？**
-逐个试 `./switch.sh 0 / 1 / 2 / 3`，鼠标切到另一台电脑的那个号即目标。
+逐个试 `./linux/switch.sh 0 / 1 / 2 / 3`，鼠标切到另一台电脑的那个号即目标。
 
 ---
 

@@ -4,7 +4,7 @@
 Rapoo MT760 屏幕边缘自动切换守护脚本
 
 当光标顶到屏幕边缘并持续顶住一小段时间(默认 0.4s)时，自动调用
-~/rapoo-switch/switch.sh 切换到对应信道，把鼠标"甩"到另一台电脑的接收器上。
+同目录下的 switch.sh 切换到对应信道，把鼠标"甩"到另一台电脑的接收器上。
 模拟了雷柏官方软件"鼠标移到屏幕边缘即切换"的行为。
 
 实现说明: 通过 ctypes 直接调用系统自带的 libX11 (XQueryPointer) 轮询光标位置，
@@ -25,6 +25,9 @@ import subprocess
 import sys
 import time
 
+# 本脚本所在目录（与 switch.sh 同目录，保证相对路径可移植）
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 CONFIG = {
     # 每个边缘对应的目标信道。不需要的边缘设为 None。
     "right_edge_channel": 1,   # 光标顶到右边缘 -> 切到信道 1
@@ -37,8 +40,8 @@ CONFIG = {
     "poll_interval": 0.02,
     # 触发后的冷却时间(秒)，期间不再触发。
     "cooldown_seconds": 2.0,
-    # 切换脚本路径
-    "switch_script": os.path.expanduser("~/rapoo-switch/switch.sh"),
+    # 切换脚本路径（与 edge-switch.py 同目录下的 switch.sh）
+    "switch_script": os.path.join(_SCRIPT_DIR, "switch.sh"),
 }
 
 # 边缘名 -> CONFIG 键

@@ -100,10 +100,11 @@ Switching itself is a single command, but daily use needs a **convenient trigger
 
 ```
 rapoo-switch/
-├── switch.sh             # Linux switch command (core)
-├── hidapitester          # Linux binary (from todbot/hidapitester)
-├── 42-rapoo.rules        # udev rule: non-root access to the receiver
-├── edge-switch.py        # [optional] switch when the cursor hits the screen edge
+├── linux/
+│   ├── switch.sh             # Linux switch command (core)
+│   ├── hidapitester          # Linux binary (from todbot/hidapitester)
+│   ├── 42-rapoo.rules        # udev rule: non-root access to the receiver
+│   └── edge-switch.py        # [optional] switch when the cursor hits the screen edge
 ├── windows/
 │   ├── hidapitester.exe        # Windows binary
 │   ├── switch_to_linux.bat     # switch back to Linux from Windows
@@ -119,19 +120,19 @@ rapoo-switch/
 
 ```bash
 # 1. Install the udev rule (non-root access to the receiver)
-sudo cp 42-rapoo.rules /usr/lib/udev/rules.d/
+sudo cp linux/42-rapoo.rules /usr/lib/udev/rules.d/
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 # If permissions still don't apply, unplug and replug the receiver once
 
 # 2. Verify a normal user can access it (list the device, no permission error)
-./hidapitester --vidpid 24ae:1870 --list-detail
+./linux/hidapitester --vidpid 24ae:1870 --list-detail
 
 # 3. Test switching (channel 2 = Windows receiver; adjust to your own mapping)
-./switch.sh 2
+./linux/switch.sh 2
 ```
 
-> `switch.sh` uses the repo-local `hidapitester` by default; you can also install it to `~/.local/bin` or point to it with the `HIDAPITESTER` environment variable.
+> `linux/switch.sh` uses the repo-local `hidapitester` by default; you can also install it to `~/.local/bin` or point to it with the `HIDAPITESTER` environment variable.
 
 ### Windows Setup
 
@@ -144,7 +145,7 @@ sudo udevadm trigger
 
 | Side | Binding | Action |
 |---|---|---|
-| Linux | GNOME custom shortcut: `<Control>Pause` → `bash /home/<user>/rapoo-switch/switch.sh 2` | Switch to Windows |
+| Linux | GNOME custom shortcut: `<Control>Pause` → `bash /home/<user>/rapoo-switch/linux/switch.sh 2` | Switch to Windows |
 | Windows | AutoHotkey (`switch_back_to_linux.ahk`): `^Pause` + `^sc146` + `^vk03` → `switch_to_linux.vbs` | Switch to Linux |
 
 On Linux, configure it under Settings → Keyboard → Custom Shortcuts; on Windows, run the `.ahk` script and it takes effect.
@@ -165,8 +166,8 @@ Bind a custom mouse button (e.g. the DPI button or a side button) to the same tr
 ### Usage
 
 ```bash
-./switch.sh 1     # switch to channel 1 (Linux receiver)
-./switch.sh 2     # switch to channel 2 (Windows receiver)
+./linux/switch.sh 1     # switch to channel 1 (Linux receiver)
+./linux/switch.sh 2     # switch to channel 2 (Windows receiver)
 ```
 
 **You have to find the channel numbers yourself**: try `0 / 1 / 2 / 3` one by one; the one that makes the mouse appear on the other computer is correct. After switching away, the current computer briefly has no mouse — that's normal.
@@ -176,8 +177,8 @@ Bind a custom mouse button (e.g. the DPI button or a side button) to the same tr
 `edge-switch.py` mimics the official software's "switch when the cursor reaches the screen edge" behavior (not in the original blog; added by this project):
 
 ```bash
-python3 edge-switch.py --dry-run   # detect only, don't switch (verify first)
-python3 edge-switch.py             # run
+python3 linux/edge-switch.py --dry-run   # detect only, don't switch (verify first)
+python3 linux/edge-switch.py             # run
 ```
 
 Use `--debug` for detailed logging; configure per-edge channels in the `CONFIG` dict at the top of the script.
@@ -191,7 +192,7 @@ No. `/dev/hidraw*` is `root:root 600` by default; the udev rule (`uaccess` + `pl
 The mouse macro injects `Ctrl+Break`, not `Ctrl+Pause` (Windows quirk: keydown is VK_CANCEL / SC 146, keyup becomes VK_PAUSE). Use the `switch_back_to_linux.ahk` from this repo, which already includes `^sc146` / `^vk03`. If it still fails, rebind the button in the Rapoo driver to send `Ctrl+F12` and update the AHK and Linux gsettings bindings accordingly.
 
 **Q: How do I find the channel numbers?**
-Try `./switch.sh 0 / 1 / 2 / 3` one by one; the one that moves the mouse to the other computer is the target. Each machine has its own channel.
+Try `./linux/switch.sh 0 / 1 / 2 / 3` one by one; the one that moves the mouse to the other computer is the target. Each machine has its own channel.
 
 ---
 
