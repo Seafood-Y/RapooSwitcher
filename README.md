@@ -39,11 +39,11 @@
 
 切换本身只需一条命令，但日常使用需要**随手可触发的入口**。本项目提供双侧热键 `Ctrl+Pause`：
 
-| 侧 | 触发入口 | 实际发送的内容 |
-|---|---|---|
-| Linux | 物理键盘 `Ctrl+Pause` | 标准 Pause（VK 13） |
-| Windows | 物理键盘 `Ctrl+Pause` | 标准 Pause（VK 13） |
-| Windows | 鼠标自定义键（雷柏驱动宏） | **Ctrl+Break**（按下 VK 03 / 扫描码 146，松开才变 Pause） |
+| 触发入口 | 实际发送的内容 |
+|---|---|
+| Linux 物理键盘 `Ctrl+Pause` | 标准 Pause（VK 13） |
+| Windows 物理键盘 `Ctrl+Pause` | 标准 Pause（VK 13） |
+| Windows 鼠标自定义键（雷柏驱动宏） | **Ctrl+Break**（按下 VK 03 / 扫描码 146，松开才变 Pause） |
 
 **为什么 Windows 端要绑三个热键（`^Pause` + `^sc146` + `^vk03`）**：实测鼠标宏在 Windows 上发送的是 `Ctrl+Break` 而非 `Ctrl+Pause`——这是 Windows 对 Pause/Break 键的著名怪癖（按下是 VK_CANCEL，松开才变 VK_PAUSE）。`^Pause` 抓物理键盘，`^sc146`/`^vk03` 抓鼠标宏，三路缺一不可。
 
@@ -61,6 +61,17 @@
 ---
 
 ## 部署方式
+
+### 系统环境
+
+| 项目 | Linux | Windows |
+|---|---|---|
+| 操作系统 | 本方案实测于 Ubuntu 22.04 + GNOME **X11** 会话 | Windows 10 / 11 |
+| 鼠标 | Rapoo MT760（VID `24ae:1870`），**两个 2.4G 接收器分别插两台电脑** | 同左 |
+| 额外软件 | 无需安装（`hidapitester` 仓库自带；可选 `edge-switch.py` 需要 Python 3） | 需安装 [AutoHotkey v2](https://www.autohotkey.com/) |
+| 权限要求 | 安装 udev 规则需要一次 `sudo` | 无需管理员 |
+
+> ⚠️ Linux 建议使用 **X11** 会话。`Super` 组合键的冲突源于 GNOME X11 的 Shell 抓取；本项目已规避（改用 `Ctrl+Pause`），但整个方案按 X11 实测。
 
 ### 目录结构
 
@@ -105,7 +116,7 @@ sudo udevadm trigger
 3. 双击 `switch_to_linux.bat` 手动验证（鼠标应切回 Linux）
 4. 双击 `switch_back_to_linux.ahk` 启用热键（托盘出现绿色 H 图标，可加入开机自启）
 
-### 双侧热键绑定
+### 键盘热键绑定
 
 | 侧 | 绑定方式 | 动作 |
 |---|---|---|
@@ -113,6 +124,19 @@ sudo udevadm trigger
 | Windows | AutoHotkey（`switch_back_to_linux.ahk`）：`^Pause` + `^sc146` + `^vk03` → `switch_to_linux.vbs` | 切回 Linux |
 
 Linux 上在 设置 → 键盘 → 自定义快捷键 里配置；Windows 上运行 `.ahk` 后即生效。
+
+### 鼠标自定义键绑定（推荐）
+
+把鼠标上的自定义按键（如 DPI 键或侧键）绑成同一触发命令，实现"按一下鼠标键就切换"。**雷柏没有 Linux 软件，绑键只能在 Windows 的雷柏管理软件里做一次，宏写入鼠标板载内存后 Linux 侧同样生效。**
+
+1. 在 Windows 上打开雷柏管理软件 → 按键自定义 / 宏设置
+2. 选择鼠标自定义键，设为发送 **`Ctrl+Pause`**
+3. 保存并写入鼠标（板载存储）
+4. 之后两台机器上的行为：
+   - 鼠标在 Linux 接收器上，按此键 → 切去 Windows
+   - 鼠标在 Windows 接收器上，按此键 → 切回 Linux
+
+> 注意：雷柏驱动宏在 Windows 上实际发送的是 `Ctrl+Break`（而非 `Ctrl+Pause`），这正是 `switch_back_to_linux.ahk` 里同时绑定 `^sc146` / `^vk03` 的原因——Windows 端已兼容，无需额外配置。
 
 ### 使用命令
 
