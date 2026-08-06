@@ -4,6 +4,29 @@
 
 ---
 
+## Table of Contents
+
+- [How It Works](#how-it-works)
+  - [Background](#background)
+  - [The Switching Principle](#the-switching-principle)
+  - [Key Parameters](#key-parameters)
+  - [Cross-Platform Notes](#cross-platform-notes)
+  - [Hotkey Design Rationale](#hotkey-design-rationale)
+  - [References](#references)
+- [Deployment](#deployment)
+  - [System Requirements](#system-requirements)
+  - [Directory Layout](#directory-layout)
+  - [Linux Setup](#linux-setup)
+  - [Windows Setup](#windows-setup)
+  - [Keyboard Hotkey Binding](#keyboard-hotkey-binding)
+  - [Mouse Custom Button Binding (Recommended)](#mouse-custom-button-binding-recommended)
+  - [Usage](#usage)
+  - [Edge-Switching (Optional)](#edge-switching-optional)
+  - [FAQ](#faq)
+- [License](#license)
+
+---
+
 ## How It Works
 
 ### Background
